@@ -1,0 +1,15 @@
+{
+  "name": "Backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true,
+  "dependencies": {
+    "@nestjs/typeorm": "^11.0.0",
+    "mariadb": "^3.4.4",
+    "typeorm": "^0.3.25"
+  }
+}
