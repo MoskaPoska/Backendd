@@ -31,11 +31,11 @@ export class Lesson
     @Column({type: 'int', nullable: false})
     position: number;
 
-    @ManyToOne(()=> Course, course => course.lessons)
-    @JoinColumn({name: "course_id"})
-    courses: Course;
-
-    @OneToMany(() => Progress, progress => progress.lesson)
-    progresses: Progress[];
+    // @ManyToOne(()=> Course, course => course.lessons)
+    // @JoinColumn({name: "course_id"})
+    // courses: Course;
+    //
+    // @OneToMany(() => Progress, progress => progress.lesson)
+    // progresses: Progress[];
 
 }

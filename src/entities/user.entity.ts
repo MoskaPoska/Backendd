@@ -24,6 +24,6 @@ export class User {
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @OneToMany(() => Progress, progress => progress.user)
-  progresses: Progress[];
+  // @OneToMany(() => Progress, progress => progress.user)
+  // progresses: Progress[];
 }

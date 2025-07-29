@@ -23,12 +23,12 @@ export class Progress {
     updated_at: Date;
 
 
-    @ManyToOne(() => User, user => user.progresses)
-    @JoinColumn({ name: 'user_id' })
-    user: User;
-
-
-    @ManyToOne(() => Lesson, lesson => lesson.progresses)
-    @JoinColumn({ name: 'lesson_id' })
-    lesson: Lesson;
+    // @ManyToOne(() => User, user => user.progresses)
+    // @JoinColumn({ name: 'user_id' })
+    // user: User;
+    //
+    //
+    // @ManyToOne(() => Lesson, lesson => lesson.progresses)
+    // @JoinColumn({ name: 'lesson_id' })
+    // lesson: Lesson;
 }

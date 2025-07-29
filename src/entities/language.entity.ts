@@ -16,6 +16,6 @@ export class Language {
     icon_url: string;
 
 
-    @OneToMany(() => Course, course => course.language) //
-    courses: Course[];
+    // @OneToMany(() => Course, course => course.language)
+    // courses: Course[];
 }

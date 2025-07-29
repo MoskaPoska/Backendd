@@ -23,10 +23,10 @@ export class Course {
     image_url: string;
 
 
-    @ManyToOne(() => Language, language => language.courses)
-    @JoinColumn({ name: 'language_id' })
-    language: Language;
+    // @ManyToOne(() => Language, language => language.courses)
+    // @JoinColumn({ name: 'language_id' })
+    // language: Language;
 
-    @OneToMany(() => Lesson, lesson => lesson.courses)
-    lessons: Lesson[];
+    // @OneToMany(() => Lesson, lesson => lesson.courses)
+    // lessons: Lesson[];
 }
