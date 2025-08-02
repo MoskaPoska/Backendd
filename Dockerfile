@@ -1,5 +1,5 @@
-# Dockerfile для NestJS Backend
-FROM node:20-alpine
+# Dockerfile
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -9,8 +9,8 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build # Собираем проект (если у вас есть шаг сборки)
+RUN npm run build
 
-EXPOSE 3000 #
+EXPOSE 3000
 
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start:prod"]

@@ -1,30 +1,29 @@
-import { Injectable } from '@nestjs/common';
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
-import {Auth} from '../entities/auth.entity';
+// src/auth/auth.service.ts (пример изменения)
+// ...
+import { Role } from '../enums/role.enum';
+import {Injectable, UnauthorizedException} from "@nestjs/common";
+import {UsersService} from "../user/user.service";
+import {JwtService} from "@nestjs/jwt"; // Импортируем Role
 
 @Injectable()
 export class AuthService {
     constructor(
-        @InjectRepository(Auth)
-        private authRepository: Repository<Auth>,
+        private usersService: UsersService,
+        private jwtService: JwtService
     ) {}
 
-    async create(userData: Partial<Auth>){
-        const newUser = this.authRepository.create(userData);
-        return this.authRepository.save(newUser);
-    }
+    async signIn(
+        username: string,
+        pass: string,
+    ): Promise<{ access_token: string }> {
+        const user = await this.usersService.findOne(username);
+        if (user?.password !== pass) {
+            throw new UnauthorizedException();
+        }
 
-    findOneById(id: number): Promise<Auth | null> {
-        return this.authRepository.findOneBy({ id });
+        const payload = { sub: user.userId, username: user.username, roles: user.roles };
+        return {
+            access_token: await this.jwtService.signAsync(payload),
+        };
     }
-
-
-    findOneByEmail(email: string): Promise<Auth | null> {
-        return this.authRepository.findOne({ where: { email }, select: ['id', 'email', 'password', 'firstName', 'lastName', 'isActive'] });
-    }
-    findAll(): Promise<Auth[]> {
-        return this.authRepository.find();
-    }
-
 }

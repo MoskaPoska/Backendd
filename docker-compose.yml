@@ -1,27 +1,9 @@
-#version: '3.8'
-#
-#services:
-#  db:
-#    image: mariadb:latest
-#
-#    container_name: nestjs_mariadb_db
-#    restart: always
-#    environment:
-#      MYSQL_ROOT_PASSWORD: mysecretrootpassword
-#      MYSQL_DATABASE: curses
-#      MYSQL_USER: QweAsdZxc23
-#      MYSQL_PASSWORD: YES
-#    ports:
-#      - "3306:3306"
-#    volumes:
-#      - db_data:/var/lib/mysql
-#volumes:
-#  db_data:
 version: '3.8'
 
 services:
   db:
     image: mariadb:latest
+
     container_name: nestjs_mariadb_db
     restart: always
     environment:
@@ -30,29 +12,8 @@ services:
       MYSQL_USER: QweAsdZxc23
       MYSQL_PASSWORD: YES
     ports:
-      - "3306:3306" # Пробрасываем порт MariaDB на хост
+      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-
-  backend: # <-- Сервис для вашего NestJS приложения
-    build:
-      context: .        # Указывает, где Dockerfile для бэкенда (обычно в корне проекта)
-      dockerfile: Dockerfile # Имя вашего Dockerfile для NestJS
-    container_name: nestjs_backend_app # Дайте осмысленное имя
-    ports:
-      - "3000:3000" # Пробрасываем порт NestJS на хост (если NestJS слушает на 3000)
-    depends_on:
-      - db # Гарантирует, что БД запустится перед бэкендом
-    environment: # Передаем переменные окружения для подключения к БД
-      DATABASE_HOST: db # Имя сервиса БД в Docker-сети
-      DATABASE_PORT: 3306
-      DATABASE_USER: QweAsdZxc23
-      DATABASE_PASSWORD: YES
-      DATABASE_NAME: curses
-    volumes:
-      - .:/app # Монтируем текущую папку проекта в контейнер (для hot-reloading)
-      - /app/node_modules # Исключаем node_modules из монтирования, чтобы использовать те, что в контейнере
-    restart: always
-
 volumes:
   db_data:
