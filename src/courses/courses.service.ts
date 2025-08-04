@@ -52,8 +52,8 @@ export class CoursesService {
      * @throws NotFoundException Если курс не найден.
      */
     async update(id: number, updateCourseDto: UpdateCourseDto): Promise<Course> {
-        const course = await this.findOne(id); // Используем findOne для проверки существования
-        // Применяем частичное обновление данных
+        const course = await this.findOne(id);
+
         Object.assign(course, updateCourseDto);
         return this.coursesRepository.save(course);
     }

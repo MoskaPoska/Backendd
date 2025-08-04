@@ -14,7 +14,7 @@ export class Course {
     description: string;
 
     @Column({ type: 'int', nullable: false })
-    language_id: number; // Внешний ключ
+    language_id: number;
 
     @Column({ type: 'varchar', length: 50, default:'beginner' })
     difficulty_level: string;

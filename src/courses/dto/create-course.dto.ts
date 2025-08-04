@@ -11,16 +11,16 @@ export class CreateCourseDto {
 
     @IsNumber()
     @IsNotEmpty()
-    @Min(1) // Предполагаем, что ID языка начинается с 1
+    @Min(1)
     language_id: number;
 
     @IsString()
     @IsOptional()
-    @IsIn(['beginner', 'intermediate', 'advanced']) // Ограничиваем возможные значения
-    difficulty_level?: string = 'beginner'; // Значение по умолчанию
+    @IsIn(['beginner', 'intermediate', 'advanced'])
+    difficulty_level?: string = 'beginner';
 
     @IsString()
     @IsOptional()
-    @IsUrl() // Проверяем, что это валидный URL
+    @IsUrl()
     image_url?: string;
 }

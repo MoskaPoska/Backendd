@@ -2,42 +2,42 @@ import { Controller, Get, Post, Body, Param, Patch, Delete, HttpCode, HttpStatus
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { Roles } from '../roles/roles.decorator'; // Импортируем декоратор @Roles
-import { Role } from '../enums/role.enum';       // Импортируем перечисление Role
-import { Public } from '../auth/constants';      // Импортируем декоратор @Public (если нужен)
+import { Roles } from '../roles/roles.decorator';
+import { Role } from '../enums/role.enum';
+import { Public } from '../auth/constants';
 
-@Controller('courses') // Базовый путь для всех маршрутов в этом контроллере
+@Controller('courses')
 export class CoursesController {
     constructor(private readonly coursesService: CoursesService) {}
 
     @Post()
-    @HttpCode(HttpStatus.CREATED) // Возвращаем 201 Created при успешном создании
-    @Roles(Role.Admin) // Только администраторы могут создавать курсы
+    @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
     create(@Body() createCourseDto: CreateCourseDto) {
         return this.coursesService.create(createCourseDto);
     }
 
     @Get()
-    @Public() // Предположим, что список курсов доступен всем
+    @Public()
     findAll() {
         return this.coursesService.findAll();
     }
 
     @Get(':id')
-    @Public() // Предположим, что просмотр одного курса доступен всем
+    @Public()
     findOne(@Param('id') id: string) {
-        return this.coursesService.findOne(+id); // Преобразуем ID из строки в число
+        return this.coursesService.findOne(+id);
     }
 
     @Patch(':id')
-    @Roles(Role.Admin) // Только администраторы могут обновлять курсы
+    @Roles(Role.Admin)
     update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
         return this.coursesService.update(+id, updateCourseDto);
     }
 
     @Delete(':id')
-    @HttpCode(HttpStatus.NO_CONTENT) // Возвращаем 204 No Content при успешном удалении
-    @Roles(Role.Admin) // Только администраторы могут удалять курсы
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @Roles(Role.Admin)
     remove(@Param('id') id: string) {
         return this.coursesService.remove(+id);
     }

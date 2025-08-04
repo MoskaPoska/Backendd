@@ -1,9 +1,7 @@
-// src/auth/auth.service.ts (пример изменения)
-// ...
 import { Role } from '../enums/role.enum';
 import {Injectable, UnauthorizedException} from "@nestjs/common";
 import {UsersService} from "../user/user.service";
-import {JwtService} from "@nestjs/jwt"; // Импортируем Role
+import {JwtService} from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {

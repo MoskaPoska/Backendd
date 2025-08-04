@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { jwtConstants } from './constants';
 import { APP_GUARD } from "@nestjs/core";
-import { AuthGuard } from "./auth.guard"; // Это ваш JWT-аутентификационный Guard
+import { AuthGuard } from "./auth.guard";
 
 @Module({
   imports: [
@@ -17,13 +17,13 @@ import { AuthGuard } from "./auth.guard"; // Это ваш JWT-аутентиф�
     }),
   ],
   providers: [
-    AuthService, // <-- ДОБАВЬТЕ ЭТУ СТРОКУ! Теперь AuthService предоставляется в этом модуле.
+    AuthService,
     {
       provide: APP_GUARD,
-      useClass: AuthGuard, // Этот AuthGuard будет применен глобально
+      useClass: AuthGuard,
     },
   ],
   controllers: [AuthController],
-  exports: [AuthService], // Теперь AuthService может быть экспортирован
+  exports: [AuthService],
 })
 export class AuthModule {}
