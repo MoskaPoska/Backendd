@@ -8,7 +8,7 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 @Injectable()
 export class CoursesService {
     constructor(
-        @InjectRepository(Course) // Внедряем репозиторий TypeORM для сущности Course
+        @InjectRepository(Course)
         private coursesRepository: Repository<Course>,
     ) {}
 
