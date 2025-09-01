@@ -1,5 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany} from 'typeorm';
-import {Progress} from "./progress.entity";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Progress } from "./progress.entity";
+import { PasswordReset } from "./password-reset.entity"; // <--- Добавьте этот импорт
 
 @Entity('users')
 export class User {
@@ -24,6 +25,9 @@ export class User {
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  // @OneToMany(() => Progress, progress => progress.user)
-  // progresses: Progress[];
+  // Добавляем обратную связь с PasswordReset
+  @OneToMany(() => PasswordReset, passwordReset => passwordReset.user)
+  passwordResets: PasswordReset[];
 }
+// @OneToMany(() => Progress, progress => progress.user)
+// progresses: Progress[];

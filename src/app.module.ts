@@ -13,6 +13,7 @@ import { Achievement} from "./entities/achievmant.entity";
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './roles/roles.guard';
 import { CoursesModule } from './courses/courses.module';
+import {AllExceptionsFilter} from "./app.exception";
 
 @Module({
   imports: [
@@ -39,11 +40,16 @@ import { CoursesModule } from './courses/courses.module';
   ],
   controllers: [AppController],
   providers: [
+
     AppService,
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    {
+      provide: 'APP_FILTER',
+      useClass: AllExceptionsFilter,
+    }
   ],
 })
 export class AppModule {}
