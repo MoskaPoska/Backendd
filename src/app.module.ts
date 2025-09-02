@@ -8,17 +8,17 @@ import { Language } from './entities/language.entity';
 import { Course } from './entities/course.entity';
 import { Lesson } from './entities/lesson.entity';
 import { Progress } from './entities/progress.entity';
-import { Achievement} from "./entities/achievmant.entity";
+//import { Achievement } from "./entities/achievement.entity";
 
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './roles/roles.guard';
 import { CoursesModule } from './courses/courses.module';
-import {AllExceptionsFilter} from "./app.exception";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: "mariadb",
+      // При локальном запуске используйте localhost
       host: process.env.DATABASE_HOST || 'localhost',
       port: parseInt(process.env.DATABASE_PORT || '3306', 10),
       username: process.env.DATABASE_USER || 'QweAsdZxc23',
@@ -30,8 +30,7 @@ import {AllExceptionsFilter} from "./app.exception";
         Course,
         Lesson,
         Progress,
-        Achievement,
-        // __dirname + '/**/*.entity{.ts,.js}'
+        //Achievement,
       ],
       synchronize: true
     }),
@@ -40,16 +39,11 @@ import {AllExceptionsFilter} from "./app.exception";
   ],
   controllers: [AppController],
   providers: [
-
     AppService,
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
-    {
-      provide: 'APP_FILTER',
-      useClass: AllExceptionsFilter,
-    }
   ],
 })
 export class AppModule {}

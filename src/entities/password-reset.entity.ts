@@ -12,7 +12,7 @@ export class PasswordReset {
     @Column()
     expires_at: Date;
 
-    @ManyToOne(() => User, user => user.passwordResets)
-    @JoinColumn({ name: 'user_id' })
-    user: User;
+    // @ManyToOne(() => User, user => user.passwordResets)
+    // @JoinColumn({ name: 'user_id' })
+    // user: User;
 }

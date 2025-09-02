@@ -24,10 +24,7 @@ export class User {
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
+  // @OneToMany(() => Progress, progress => progress.user)
+  // progresses: Progress[];
 
-  // Добавляем обратную связь с PasswordReset
-  @OneToMany(() => PasswordReset, passwordReset => passwordReset.user)
-  passwordResets: PasswordReset[];
 }
-// @OneToMany(() => Progress, progress => progress.user)
-// progresses: Progress[];
