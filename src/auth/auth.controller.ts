@@ -13,6 +13,7 @@ import { AuthService } from './auth.service';
 import { Public } from './constants';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import {LoginDto} from "../courses/dto/login.dto";
+import {RegisterDto} from "../courses/dto/register.dto";
 
 @ApiTags('auth')
 @Controller('auth')
@@ -37,5 +38,11 @@ export class AuthController {
     @ApiResponse({ status: 401, description: 'Неавторизован' })
     getProfile(@Request() req) {
         return req.user;
+    }
+    @Public()
+    @HttpCode(HttpStatus.CREATED)
+    @Post('register')
+    register(@Body() registerDto: RegisterDto) {
+        return this.authService.register(registerDto);
     }
 }

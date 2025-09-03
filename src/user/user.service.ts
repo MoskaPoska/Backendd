@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
 import { Role } from '../enums/role.enum';
 
-export type User = {
+
+export type TestUser = {
     userId: number;
     username: string;
     password: string;
@@ -9,8 +13,9 @@ export type User = {
 };
 
 @Injectable()
-export class UsersService {
-    private readonly users: User[] = [
+export class UserService {
+
+    private readonly testUsers: TestUser[] = [
         {
             userId: 1,
             username: 'john',
@@ -25,7 +30,44 @@ export class UsersService {
         },
     ];
 
-    async findOne(username: string): Promise<User | undefined> {
-        return this.users.find(user => user.username === username);
+    constructor(
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
+    ) {}
+
+
+    async findOneByEmail(email: string): Promise<User | undefined> {
+
+        const userFromDb = await this.usersRepository.findOne({ where: { email } });
+        if (userFromDb) {
+            return userFromDb;
+        }
+
+
+        const testUser = this.testUsers.find(u => u.username === email);
+
+        if (testUser) {
+            const userEntity = new User();
+            userEntity.id = testUser.userId;
+            userEntity.email = testUser.username;
+            // Внимание: пароль здесь не хеширован, что небезопасно для production
+            userEntity.password_hash = testUser.password;
+            userEntity.name = testUser.username;
+            userEntity.role = testUser.roles ? testUser.roles[0] : Role.User;
+            return userEntity;
+        }
+
+        return undefined;
+    }
+
+
+    async create(email: string, name: string, password_hash: string): Promise<User> {
+        const existingUser = await this.findOneByEmail(email);
+        if (existingUser) {
+            throw new BadRequestException('Пользователь с таким email уже существует.');
+        }
+
+        const newUser = this.usersRepository.create({ email, name, password_hash });
+        return this.usersRepository.save(newUser);
     }
 }

@@ -1,25 +1,43 @@
 import { Role } from '../enums/role.enum';
 import {Injectable, UnauthorizedException} from "@nestjs/common";
-import {UsersService} from "../user/user.service";
+import {UserService} from "../user/user.service";
 import {JwtService} from "@nestjs/jwt";
+import {RegisterDto} from "../courses/dto/register.dto";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private usersService: UsersService,
+        private userService: UserService,
         private jwtService: JwtService
     ) {}
 
-    async signIn(
-        username: string,
-        pass: string,
-    ): Promise<{ access_token: string }> {
-        const user = await this.usersService.findOne(username);
-        if (user?.password !== pass) {
-            throw new UnauthorizedException();
+    async signIn(email: string, pass: string): Promise<{ access_token: string }> {
+        const user = await this.userService.findOneByEmail(email);
+        if (!user) {
+            throw new UnauthorizedException('Неверный email или пароль.');
         }
 
-        const payload = { sub: user.userId, username: user.username, roles: user.roles };
+        const isPasswordMatching = await bcrypt.compare(pass, user.password_hash);
+        if (!isPasswordMatching) {
+            throw new UnauthorizedException('Неверный email или пароль.');
+        }
+
+        const payload = { sub: user.id, email: user.email, role: user.role };
+        return {
+            access_token: await this.jwtService.signAsync(payload),
+        };
+    }
+    async register(registerDto: RegisterDto): Promise<{ access_token: string }> {
+        const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+
+        const newUser = await this.userService.create(
+            registerDto.email,
+            registerDto.name,
+            hashedPassword
+        );
+
+        const payload = { sub: newUser.id, email: newUser.email, role: newUser.role };
         return {
             access_token: await this.jwtService.signAsync(payload),
         };
