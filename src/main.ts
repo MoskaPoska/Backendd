@@ -25,7 +25,11 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document);
 
   app.useGlobalGuards(new AuthGuard(jwtService, reflector));
+  //app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(3000);
+  const port = 3001;
+  await app.listen(port);
+
+  console.log(`\nApplication is running on: http://localhost:${port}`);
 }
 bootstrap();
