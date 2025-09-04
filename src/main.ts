@@ -30,6 +30,6 @@ async function bootstrap() {
   const port = 3001;
   await app.listen(port);
 
-  console.log(`\nApplication is running on: http://localhost:${port}`);
+  console.log(`\n http://localhost:${port}`);
 }
 bootstrap();
