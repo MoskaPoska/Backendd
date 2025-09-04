@@ -4,9 +4,12 @@ import { AppModule } from './app.module';
 import { AuthGuard } from './auth/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import {ValidationPipe} from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.enableCors();
 
   const jwtService = app.get(JwtService);
   const reflector = app.get(Reflector);
@@ -25,7 +28,7 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document);
 
   app.useGlobalGuards(new AuthGuard(jwtService, reflector));
-  //app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe());
 
   const port = 3001;
   await app.listen(port);
