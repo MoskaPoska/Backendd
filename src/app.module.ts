@@ -13,6 +13,7 @@ import { Progress } from './entities/progress.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './roles/roles.guard';
 import { CoursesModule } from './courses/courses.module';
+import { AchievmantModule } from './achievmant/achievmant.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { CoursesModule } from './courses/courses.module';
     }),
     AuthModule,
     CoursesModule,
+    AchievmantModule,
   ],
   controllers: [AppController],
   providers: [

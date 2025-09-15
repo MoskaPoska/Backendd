@@ -9,27 +9,27 @@ enum UserDifficultyLevel {
 }
 
 export class UpdateUserDto {
-    @ApiPropertyOptional({ description: 'Новое имя пользователя', example: 'JohnDoe', minLength: 3, maxLength: 50 })
+    @ApiPropertyOptional({ description: 'Нове ім\'я користувача', example: 'JohnDoe', minLength: 3, maxLength: 50 })
     @IsString()
     @IsOptional()
     @MinLength(3)
     @MaxLength(50)
     username?: string;
 
-    @ApiPropertyOptional({ description: 'Новый email пользователя', example: 'john.doe@example.com' })
+    @ApiPropertyOptional({ description: 'Новий email користувача', example: 'john.doe@example.com' })
     @IsEmail()
     @IsOptional()
     email?: string;
 
-    @ApiPropertyOptional({ description: 'Новый пароль', example: 'NewPass123', minLength: 6 })
+    @ApiPropertyOptional({ description: 'Новий пароль', example: 'NewPass123', minLength: 6 })
     @IsString()
     @IsOptional()
     @MinLength(6)
-    @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/, { message: 'Пароль должен содержать буквы и цифры' })
+    @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/, { message: 'Пароль повинен містити літери та цифри' })
     password?: string;
 
     @ApiPropertyOptional({
-        description: 'Предпочитаемый уровень сложности',
+        description: 'Переважний рівень складності',
         example: 'intermediate',
         enum: UserDifficultyLevel,
     })
@@ -37,7 +37,7 @@ export class UpdateUserDto {
     @IsOptional()
     preferred_difficulty_level?: UserDifficultyLevel;
 
-    @ApiPropertyOptional({ description: 'Предпочитаемый язык обучения', example: 'English' })
+    @ApiPropertyOptional({ description: 'Вподобана мова навчання', example: 'English' })
     @IsString()
     @IsOptional()
     preferred_language?: string;

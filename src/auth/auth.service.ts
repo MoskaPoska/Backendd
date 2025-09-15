@@ -15,12 +15,12 @@ export class AuthService {
     async signIn(email: string, pass: string): Promise<{ access_token: string }> {
         const user = await this.userService.findOneByEmail(email);
         if (!user) {
-            throw new UnauthorizedException('Неверный email или пароль.');
+            throw new UnauthorizedException('Невірний email або пароль.');
         }
 
         const isPasswordMatching = await bcrypt.compare(pass, user.password_hash);
         if (!isPasswordMatching) {
-            throw new UnauthorizedException('Неверный email или пароль.');
+            throw new UnauthorizedException('Невірний email або пароль.');
         }
 
         const payload = { sub: user.id, email: user.email, role: user.role };

@@ -8,13 +8,9 @@ import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY, jwtConstants } from './constants';
 
-
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor(
-        private jwtService: JwtService,
-        private reflector: Reflector
-    ) {}
+    constructor(private jwtService: JwtService, private reflector: Reflector) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
@@ -25,25 +21,27 @@ export class AuthGuard implements CanActivate {
             return true;
         }
 
-        const request: any = context.switchToHttp().getRequest();
+        const request = context.switchToHttp().getRequest();
         const token = this.extractTokenFromHeader(request);
+
         if (!token) {
-            throw new UnauthorizedException('Токен не предоставлен');
+            throw new UnauthorizedException('Token not provided');
         }
+
         try {
             const payload = await this.jwtService.verifyAsync(token, {
                 secret: jwtConstants.secret,
             });
             request['user'] = payload;
         } catch {
-            throw new UnauthorizedException('Недействительный или просроченный токен');
+            throw new UnauthorizedException('Invalid or expired token');
         }
+
         return true;
     }
 
     private extractTokenFromHeader(request: any): string | undefined {
-        const authorizationHeader = request.headers?.authorization;
-        const [type, token] = authorizationHeader?.split(' ') ?? [];
+        const [type, token] = request.headers.authorization?.split(' ') ?? [];
         return type === 'Bearer' ? token : undefined;
     }
 }

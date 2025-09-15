@@ -30,38 +30,38 @@ export class CoursesController {
     @Post()
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
-    @ApiOperation({ summary: 'Создание нового курса' })
-    @ApiResponse({ status: 201, description: 'Курс успешно создан', type: CreateCourseDto })
-    @ApiResponse({ status: 400, description: 'Неверные данные' })
-    @ApiResponse({ status: 403, description: 'Доступ только для администраторов' })
+    @ApiOperation({ summary: 'Створення нового курсу' })
+    @ApiResponse({ status: 201, description: 'Курс успішно створено', type: CreateCourseDto })
+    @ApiResponse({ status: 400, description: 'Неправильні дані' })
+    @ApiResponse({ status: 403, description: 'Доступ лише для адміністраторів' })
     create(@Body() createCourseDto: CreateCourseDto) {
         return this.coursesService.create(createCourseDto);
     }
 
     @Get()
     @Public()
-    @ApiOperation({ summary: 'Получение списка всех курсов' })
-    @ApiResponse({ status: 200, description: 'Список курсов', type: [CreateCourseDto] })
+    @ApiOperation({ summary: 'Отримання списку всіх курсів' })
+    @ApiResponse({ status: 200, description: 'Список курсів', type: [CreateCourseDto] })
     findAll() {
         return this.coursesService.findAll();
     }
 
     @Get(':id')
     @Public()
-    @ApiOperation({ summary: 'Получение курса по ID' })
-    @ApiResponse({ status: 200, description: 'Курс найден', type: CreateCourseDto })
-    @ApiResponse({ status: 404, description: 'Курс не найден' })
+    @ApiOperation({ summary: 'Отримання курсу з ID' })
+    @ApiResponse({ status: 200, description: 'Курс знайден', type: CreateCourseDto })
+    @ApiResponse({ status: 404, description: 'Курс не знайден' })
     findOne(@Param('id') id: string) {
         return this.coursesService.findOne(+id);
     }
 
     @Patch(':id')
     @Roles(Role.Admin)
-    @ApiOperation({ summary: 'Обновление курса по ID' })
-    @ApiResponse({ status: 200, description: 'Курс успешно обновлен', type: UpdateCourseDto })
-    @ApiResponse({ status: 400, description: 'Неверные данные' })
-    @ApiResponse({ status: 403, description: 'Доступ только для администраторов' })
-    @ApiResponse({ status: 404, description: 'Курс не найден' })
+    @ApiOperation({ summary: 'Оновлення курсу з ID' })
+    @ApiResponse({ status: 200, description: 'Курс успішно оновлено', type: UpdateCourseDto })
+    @ApiResponse({ status: 400, description: 'Неправильні дані' })
+    @ApiResponse({ status: 403, description: 'Доступ лише для адміністраторів' })
+    @ApiResponse({ status: 404, description: 'Курс не знайдено' })
     update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
         return this.coursesService.update(+id, updateCourseDto);
     }
@@ -69,10 +69,10 @@ export class CoursesController {
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @Roles(Role.Admin)
-    @ApiOperation({ summary: 'Удаление курса по ID' })
-    @ApiResponse({ status: 204, description: 'Курс успешно удален' })
-    @ApiResponse({ status: 403, description: 'Доступ только для администраторов' })
-    @ApiResponse({ status: 404, description: 'Курс не найден' })
+    @ApiOperation({ summary: 'Видалення курсу з ID' })
+    @ApiResponse({ status: 204, description: 'Курс успішно вилучено' })
+    @ApiResponse({ status: 403, description: 'Доступ лише для адміністраторів' })
+    @ApiResponse({ status: 404, description: 'Курс не знайдено' })
     remove(@Param('id') id: string) {
         return this.coursesService.remove(+id);
     }

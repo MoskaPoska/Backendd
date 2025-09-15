@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {Injectable, BadRequestException, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
@@ -64,10 +64,19 @@ export class UserService {
     async create(email: string, name: string, password_hash: string): Promise<User> {
         const existingUser = await this.findOneByEmail(email);
         if (existingUser) {
-            throw new BadRequestException('Пользователь с таким email уже существует.');
+            throw new BadRequestException('Користувач із таким email вже існує.');
         }
 
         const newUser = this.usersRepository.create({ email, name, password_hash });
         return this.usersRepository.save(newUser);
+    }
+    async updatePassword(id: number, newHashedPassword: string): Promise<User> {
+        const user = await this.usersRepository.findOne({ where: { id } });
+        if (!user) {
+            throw new NotFoundException('Користувач не знайдено');
+        }
+
+        user.password_hash = newHashedPassword;
+        return this.usersRepository.save(user);
     }
 }

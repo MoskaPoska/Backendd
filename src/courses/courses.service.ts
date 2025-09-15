@@ -39,7 +39,7 @@ export class CoursesService {
     async findOne(id: number): Promise<Course> {
         const course = await this.coursesRepository.findOne({ where: { id } });
         if (!course) {
-            throw new NotFoundException(`Курс с ID ${id} не найден.`);
+            throw new NotFoundException(`Курс з ID ${id} не знайден.`);
         }
         return course;
     }
@@ -66,7 +66,7 @@ export class CoursesService {
     async remove(id: number): Promise<void> {
         const result = await this.coursesRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Курс с ID ${id} не найден.`);
+            throw new NotFoundException(`Курс з ID ${id} не знайден.`);
         }
     }
 }
