@@ -12,7 +12,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('login')
     async login(@Body() loginDto: LoginDto) {
-        return this.authService.signIn(loginDto.username, loginDto.password);
+        return this.authService.signIn(loginDto.email, loginDto.password);
     }
 
     @Public()

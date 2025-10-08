@@ -9,6 +9,7 @@ export type TestUser = {
     userId: number;
     username: string;
     password: string;
+    email: string;
     roles?: Role[];
 };
 
@@ -18,14 +19,16 @@ export class UserService {
     private readonly testUsers: TestUser[] = [
         {
             userId: 1,
+            email:'',
             username: 'john',
             password: 'changeme',
             roles: [Role.Admin],
         },
         {
             userId: 2,
+            email:'maria@example.com',
             username: 'maria',
-            password: 'guess',
+            password: 'strongpassword123',
             roles: [Role.User],
         },
     ];
@@ -50,7 +53,6 @@ export class UserService {
             const userEntity = new User();
             userEntity.id = testUser.userId;
             userEntity.email = testUser.username;
-            // Внимание: пароль здесь не хеширован, что небезопасно для production
             userEntity.password_hash = testUser.password;
             userEntity.name = testUser.username;
             userEntity.role = testUser.roles ? testUser.roles[0] : Role.User;
