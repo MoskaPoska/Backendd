@@ -14,7 +14,6 @@ export class LiqpayService {
         this.LIQPAY_PRIVATE_KEY = this.configService.get<string>('LIQPAY_PRIVATE_KEY')!;
 
         if (!this.LIQPAY_PUBLIC_KEY || !this.LIQPAY_PRIVATE_KEY) {
-            // Оновлено: Помилка ініціалізації (українською)
             throw new InternalServerErrorException('Ключі LiqPay не налаштовані в конфігурації.');
         }
     }
@@ -60,37 +59,37 @@ export class LiqpayService {
         return this.generateLiqPayDataAndSignature(paymentParams);
     }
 
-    public async createPayment(amount: number, order_id: string, description: string): Promise<any> {
-        const paymentParams = {
-            action: 'pay',
-            amount: amount.toFixed(2),
-            currency: 'UAH',
-            description: description,
-            order_id: order_id,
-            server_url: this.configService.get<string>('LIQPAY_SERVER_CALLBACK_URL'),
-
-            language: 'uk',
-        };
-
-        const { data, signature } = this.generateLiqPayDataAndSignature(paymentParams);
-
-        const formData = new URLSearchParams();
-        formData.append('data', data);
-        formData.append('signature', signature);
-
-        try {
-            const response: AxiosResponse = await axios.post(this.LIQPAY_API_URL, formData.toString(), {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-            });
-
-            return response.data;
-        } catch (error) {
-            console.error('LiqPay API Error:', error.response?.data || error.message);
-            throw new InternalServerErrorException('Помилка при створенні платежу через LiqPay API.');
-        }
-    }
+    // public async createPayment(amount: number, order_id: string, description: string): Promise<any> {
+    //     const paymentParams = {
+    //         action: 'pay',
+    //         amount: amount.toFixed(2),
+    //         currency: 'UAH',
+    //         description: description,
+    //         order_id: order_id,
+    //         server_url: this.configService.get<string>('LIQPAY_SERVER_CALLBACK_URL'),
+    //
+    //         language: 'uk',
+    //     };
+    //
+    //     const { data, signature } = this.generateLiqPayDataAndSignature(paymentParams);
+    //
+    //     const formData = new URLSearchParams();
+    //     formData.append('data', data);
+    //     formData.append('signature', signature);
+    //
+    //     try {
+    //         const response: AxiosResponse = await axios.post(this.LIQPAY_API_URL, formData.toString(), {
+    //             headers: {
+    //                 'Content-Type': 'application/x-www-form-urlencoded',
+    //             },
+    //         });
+    //
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error('LiqPay API Error:', error.response?.data || error.message);
+    //         throw new InternalServerErrorException('Помилка при створенні платежу через LiqPay API.');
+    //     }
+    // }
     public decodeData(data: string): any {
         try {
             const decodedString = Buffer.from(data, 'base64').toString('utf8');
