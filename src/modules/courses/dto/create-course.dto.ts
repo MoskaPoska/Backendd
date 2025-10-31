@@ -1,5 +1,6 @@
 import { IsString, IsNotEmpty, IsNumber, IsOptional, IsUrl, IsIn, Min, Max } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {AzureBlobService } from "../../../azure/azure.service";
 
 export class CreateCourseDto {
     @ApiProperty({ description: 'Назва курсу', example: 'Beginner English' })

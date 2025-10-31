@@ -8,7 +8,11 @@ import {
     Delete,
     HttpCode,
     HttpStatus,
+    UploadedFile,
+    UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { AzureBlobService } from "../../azure/azure.service";
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -19,24 +23,70 @@ import {
     ApiTags,
     ApiOperation,
     ApiResponse,
-    ApiBearerAuth,
+    ApiConsumes,
+    ApiBody,
 } from '@nestjs/swagger';
 
 @ApiTags('courses')
 @Controller('courses')
 export class CoursesController {
-    constructor(private readonly coursesService: CoursesService) {}
+    constructor(
+        private readonly coursesService: CoursesService,
+        private readonly azureBlobService: AzureBlobService
+    ) {}
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
-    @ApiOperation({ summary: 'Створення нового курсу' })
+    @ApiOperation({ summary: 'Створення нового курсу (підтримує завантаження зображення)' })
     @ApiResponse({ status: 201, description: 'Курс успішно створено', type: CreateCourseDto })
-    @ApiResponse({ status: 400, description: 'Неправильні дані' })
     @ApiResponse({ status: 403, description: 'Доступ лише для адміністраторів' })
-    create(@Body() createCourseDto: CreateCourseDto) {
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+
+                image: {
+                    type: 'string',
+                    format: 'binary',
+                    description: 'Файл зображення курсу',
+                },
+
+                title: { type: 'string', example: 'Beginner English' },
+                description: { type: 'string', example: 'Основи англійської мови' },
+                language_id: { type: 'number', example: 1 },
+                price: { type: 'number', example: 100 },
+
+                difficulty_level: {
+                    type: 'string',
+                    example: 'beginner',
+                    enum: ['beginner', 'intermediate', 'advanced'],
+                    default: 'beginner',
+                    description: 'Рівень складності курсу (beginner, intermediate, advanced)',
+                },
+
+            },
+            required: ['title', 'language_id', 'price'],
+        },
+    })
+
+    @UseInterceptors(FileInterceptor('image'))
+    async create(
+        @UploadedFile() file: Express.Multer.File,
+        @Body() createCourseDto: CreateCourseDto,
+    ) {
+        let finalImageUrl: string | undefined = createCourseDto.image_url;
+
+        if (file) {
+            finalImageUrl = await this.azureBlobService.uploadFile(file);
+        }
+
+        createCourseDto.image_url = finalImageUrl;
+
         return this.coursesService.create(createCourseDto);
     }
+
 
     @Get()
     @Public()
