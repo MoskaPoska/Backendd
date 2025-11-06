@@ -1,9 +1,9 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 
 @Injectable()
-export class AzureBlobService {
+export class AzureBlobService implements OnModuleInit{
     private readonly blobServiceClient: BlobServiceClient;
     private readonly containerName: string;
 
@@ -16,7 +16,18 @@ export class AzureBlobService {
         }
 
         this.blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
-        this.ensureContainerExists();
+    }
+
+
+    async onModuleInit() {
+        console.log(`Ініціалізація Azure: Перевірка контейнера ${this.containerName}...`);
+        try {
+            await this.ensureContainerExists();
+            console.log('Контейнер Azure Blob успішно готовий.');
+        } catch(error) {
+            console.error('КРИТИЧНА ПОМИЛКА: Не вдалося створити або підключитися до контейнера Azure.', error);
+            throw new InternalServerErrorException('Помилка ініціалізації Azure Blob Storage.');
+        }
     }
 
     private async ensureContainerExists() {

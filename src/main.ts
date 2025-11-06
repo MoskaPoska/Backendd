@@ -1,4 +1,3 @@
-// src/main.ts
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './core/app.module';
 import { AuthGuard } from './common/guards/auth.guard';
@@ -21,7 +20,16 @@ async function bootstrap() {
       .addTag('auth')
       .addTag('courses')
       .addTag('user')
-      .addBearerAuth()
+      .addBearerAuth(
+          {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            description: 'Введіть JWT-токен у форматі: Bearer <токен>',
+            in: 'header',
+          },
+          'access-token'
+      )
       .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -30,7 +38,8 @@ async function bootstrap() {
   app.useGlobalGuards(new AuthGuard(jwtService, reflector));
   app.useGlobalPipes(new ValidationPipe());
 
-  const port = 3001;
+  //const port = 3001;
+  const port = process.env.PORT || 3001;
   await app.listen(port);
 
   console.log(`\n http://localhost:${port}`);
