@@ -21,7 +21,6 @@ export class CreateCourseDto {
 
     @ApiPropertyOptional({
         description: 'Рівень складності курсу',
-        example: 'beginner',
         enum: ['beginner', 'intermediate', 'advanced'],
         default: 'beginner',
     })

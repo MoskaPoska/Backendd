@@ -2,14 +2,21 @@ import {IsString, IsNotEmpty, MinLength, MaxLength, IsEmail} from 'class-validat
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginDto {
-    @IsString()
-    @IsNotEmpty()
-    @IsEmail()
+    @ApiProperty({
+        description: 'Email користувача для входу',
+
+    })
+    @IsString({ message: 'Email повинен бути текстовим рядком.' })
+    @IsNotEmpty({ message: 'Email не може бути порожнім.' })
+    @IsEmail({}, { message: 'Введіть коректний формат електронної пошти.' })
     email: string;
 
-    @ApiProperty({ description: 'Пароль', example: 'password123', minLength: 6 })
-    @IsString()
-    @IsNotEmpty()
-    @MinLength(6)
+    @ApiProperty({
+        description: 'Пароль користувача',
+
+    })
+    @IsString({ message: 'Пароль повинен бути текстовим рядком.' })
+    @IsNotEmpty({ message: 'Пароль не може бути порожнім.' })
+    @MinLength(6, { message: 'Пароль повинен містити не менше 6 символів.' })
     password: string;
 }

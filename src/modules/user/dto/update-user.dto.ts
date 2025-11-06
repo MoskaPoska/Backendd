@@ -30,7 +30,6 @@ export class UpdateUserDto {
 
     @ApiPropertyOptional({
         description: 'Переважний рівень складності',
-        example: 'intermediate',
         enum: UserDifficultyLevel,
     })
     @IsEnum(UserDifficultyLevel)

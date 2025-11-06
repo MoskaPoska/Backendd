@@ -3,7 +3,8 @@ import { AuthService } from './auth.service';
 import { Public } from './constants';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
@@ -23,6 +24,7 @@ export class AuthController {
     }
 
     @Get('me')
+    @ApiBearerAuth()
     async me(@Request() req) {
         return req.user;
     }

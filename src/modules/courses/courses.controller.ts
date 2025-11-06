@@ -25,6 +25,7 @@ import {
     ApiResponse,
     ApiConsumes,
     ApiBody,
+    ApiBearerAuth,
 } from '@nestjs/swagger';
 
 @ApiTags('courses')
@@ -35,6 +36,8 @@ export class CoursesController {
         private readonly azureBlobService: AzureBlobService
     ) {}
 
+
+    @ApiBearerAuth()
     @Post()
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
@@ -46,18 +49,15 @@ export class CoursesController {
         schema: {
             type: 'object',
             properties: {
-
                 image: {
                     type: 'string',
                     format: 'binary',
                     description: 'Файл зображення курсу',
                 },
-
                 title: { type: 'string', example: 'Beginner English' },
                 description: { type: 'string', example: 'Основи англійської мови' },
                 language_id: { type: 'number', example: 1 },
                 price: { type: 'number', example: 100 },
-
                 difficulty_level: {
                     type: 'string',
                     example: 'beginner',
@@ -65,12 +65,10 @@ export class CoursesController {
                     default: 'beginner',
                     description: 'Рівень складності курсу (beginner, intermediate, advanced)',
                 },
-
             },
             required: ['title', 'language_id', 'price'],
         },
     })
-
     @UseInterceptors(FileInterceptor('image'))
     async create(
         @UploadedFile() file: Express.Multer.File,
@@ -96,6 +94,7 @@ export class CoursesController {
         return this.coursesService.findAll();
     }
 
+
     @Get(':id')
     @Public()
     @ApiOperation({ summary: 'Отримання курсу з ID' })
@@ -105,6 +104,8 @@ export class CoursesController {
         return this.coursesService.findOne(+id);
     }
 
+
+    @ApiBearerAuth()
     @Patch(':id')
     @Roles(Role.Admin)
     @ApiOperation({ summary: 'Оновлення курсу з ID' })
@@ -116,6 +117,8 @@ export class CoursesController {
         return this.coursesService.update(+id, updateCourseDto);
     }
 
+
+    @ApiBearerAuth()
     @Delete(':id')
     @HttpCode(HttpStatus.NO_CONTENT)
     @Roles(Role.Admin)

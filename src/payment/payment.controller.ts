@@ -3,7 +3,7 @@ import { LiqpayService } from './liqpay.service';
 import {ConfigService} from "@nestjs/config";
 import { Response } from 'express';
 import {Public} from "../modules/auth/constants";
-
+import { ApiTags } from '@nestjs/swagger';
 
 class CreatePaymentDto {
     amount: number;
@@ -11,6 +11,7 @@ class CreatePaymentDto {
     description: string;
 }
 
+@ApiTags('payments')
 @Controller('payments')
 export class PaymentController {
     constructor(private liqpayService: LiqpayService,
@@ -28,17 +29,17 @@ export class PaymentController {
             body.description,
         );
 
-
         return {
             success: true,
             message: 'Data generated for LiqPay redirect',
             ...liqpayData,
-
             liqpayUrl: 'https://www.liqpay.ua/api/3/checkout',
         };
     }
+
     @Post('callback')
     @HttpCode(HttpStatus.OK)
+    @Public()
     async liqpayCallback(@Body() body: { data: string, signature: string }) {
         if (!body.data || !body.signature) {
             console.error('LiqPay Callback: Missing data or signature.');
@@ -58,30 +59,26 @@ export class PaymentController {
 
         try {
             await this.updateOrderStatus(orderId, status);
-
             return { status: 'ok', order_id: orderId, new_status: status };
-
         } catch (error) {
             console.error(`Failed to process order ${orderId}:`, error.message);
             return { status: 'error', message: 'Internal processing error' };
         }
     }
 
-    /**
-     * Умовний метод для оновлення статусу замовлення в базі даних.
-     */
     private async updateOrderStatus(orderId: string, status: string): Promise<void> {
         console.log(`[DB UPDATE] Order ${orderId} status changed to: ${status}`);
-
         if (status === 'success' || status === 'sandbox') {
         }
     }
+
+
     @Post('return')
+    @Public()
     async liqpayReturn(
         @Body() body: { data: string, signature: string },
         @Res() res: Response
     ) {
-
         const paymentData = this.liqpayService.decodeData(body.data);
         const status = paymentData.status;
         const orderId = paymentData.order_id;
@@ -91,7 +88,6 @@ export class PaymentController {
         let redirectUrl;
 
         if (status === 'success' || status === 'sandbox') {
-
             redirectUrl = `${frontendBaseUrl}/payment/success?order=${orderId}`;
         } else {
             redirectUrl = `${frontendBaseUrl}/payment/failure?order=${orderId}&status=${status}`;
