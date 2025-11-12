@@ -16,12 +16,13 @@ import { CoursesModule } from '../modules/courses/courses.module';
 import { AchievementModule } from '../modules/achievmant/achievmant.module';
 import {PaymentModule} from "../payment/payment.module";
 import {AuthGuard} from "../common/guards/auth.guard";
+import {Achievement} from "../entities/achievmant.entity";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: "mariadb",
-      // При локальном запуске используйте localhost
+
       host: process.env.DATABASE_HOST || 'localhost',
       port: parseInt(process.env.DATABASE_PORT || '3306', 10),
       username: process.env.DATABASE_USER || 'QweAsdZxc23',
@@ -33,7 +34,7 @@ import {AuthGuard} from "../common/guards/auth.guard";
         Course,
         Lesson,
         Progress,
-        //Achievement,
+        Achievement,
       ],
       synchronize: true
     }),

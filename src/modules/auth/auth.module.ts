@@ -19,7 +19,6 @@ import { mailerConfig } from '../../config/mailer.config';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
     }),
   ],
   providers: [

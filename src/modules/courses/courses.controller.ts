@@ -19,6 +19,7 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../common/enums/role.enum';
 import { Public } from '../auth/constants';
+import { plainToInstance } from 'class-transformer';
 import {
     ApiTags,
     ApiOperation,
@@ -74,15 +75,17 @@ export class CoursesController {
         @UploadedFile() file: Express.Multer.File,
         @Body() createCourseDto: CreateCourseDto,
     ) {
-        let finalImageUrl: string | undefined = createCourseDto.image_url;
+        const transformedDto = plainToInstance(CreateCourseDto, createCourseDto);
+
+        let finalImageUrl: string | undefined = transformedDto.image_url;
 
         if (file) {
             finalImageUrl = await this.azureBlobService.uploadFile(file);
         }
 
-        createCourseDto.image_url = finalImageUrl;
+        transformedDto.image_url = finalImageUrl;
 
-        return this.coursesService.create(createCourseDto);
+        return this.coursesService.create(transformedDto);
     }
 
 
