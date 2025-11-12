@@ -35,8 +35,12 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 
-  app.useGlobalGuards(new AuthGuard(jwtService, reflector));
-  app.useGlobalPipes(new ValidationPipe());
+  //app.useGlobalGuards(new AuthGuard(jwtService, reflector));
+    app.useGlobalPipes(new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: true,
+    }));
 
   //const port = 3001;
   const port = process.env.PORT || 3001;

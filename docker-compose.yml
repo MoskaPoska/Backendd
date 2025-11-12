@@ -17,6 +17,18 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: nestjs_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db #
+      MYSQL_ROOT_PASSWORD: mysecretrootpassword
+    ports:
+      - "8888:80"
+    depends_on:
+      - db
+
   backend:
     build:
       context: .

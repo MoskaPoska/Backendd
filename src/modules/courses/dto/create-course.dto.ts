@@ -1,7 +1,7 @@
 import { IsString, IsNotEmpty, IsNumber, IsOptional, IsUrl, IsIn, Min, Max } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {AzureBlobService } from "../../../azure/azure.service";
-
+import { Type } from 'class-transformer';
 export class CreateCourseDto {
     @ApiProperty({ description: 'Назва курсу', example: 'Beginner English' })
     @IsString()
@@ -13,6 +13,7 @@ export class CreateCourseDto {
     @IsOptional()
     description?: string;
 
+    @Type(() => Number)
     @ApiProperty({ description: 'Ідентифікатор мов курса', example: 1 })
     @IsNumber()
     @IsNotEmpty()
@@ -35,6 +36,7 @@ export class CreateCourseDto {
     @IsUrl()
     image_url?: string;
 
+    @Type(() => Number)
     @ApiProperty({ description: 'Ціна курсу', example: 100 })
     @IsNumber()
     @IsNotEmpty()

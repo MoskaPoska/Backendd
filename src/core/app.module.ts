@@ -15,6 +15,7 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { CoursesModule } from '../modules/courses/courses.module';
 import { AchievementModule } from '../modules/achievmant/achievmant.module';
 import {PaymentModule} from "../payment/payment.module";
+import {AuthGuard} from "../common/guards/auth.guard";
 
 @Module({
   imports: [
@@ -44,6 +45,10 @@ import {PaymentModule} from "../payment/payment.module";
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
